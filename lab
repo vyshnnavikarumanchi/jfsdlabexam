@@ -1,0 +1,56 @@
+package com.klef.jfsd.exam;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import java.util.List;
+
+public class ClientDemo {
+    public static void main(String[] args) {
+        Configuration cfg = new Configuration();
+        cfg.configure("hibernate.cfg.xml");
+
+        SessionFactory sessionFactory = cfg.buildSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        // Insert Records
+        Transaction transaction = session.beginTransaction();
+        Client client1 = new Client();
+        client1.setName("John Doe");
+        client1.setGender("Male");
+        client1.setAge(30);
+        client1.setLocation("New York");
+        client1.setEmail("johndoe@example.com");
+        client1.setMobileNumber("1234567890");
+
+        Client client2 = new Client();
+        client2.setName("Jane Smith");
+        client2.setGender("Female");
+        client2.setAge(28);
+        client2.setLocation("Los Angeles");
+        client2.setEmail("janesmith@example.com");
+        client2.setMobileNumber("0987654321");
+
+        session.save(client1);
+        session.save(client2);
+        transaction.commit();
+
+        // Print All Records
+        List<Client> clients = session.createQuery("from Client", Client.class).list();
+        for (Client client : clients) {
+            System.out.println("ID: " + client.getId());
+            System.out.println("Name: " + client.getName());
+            System.out.println("Gender: " + client.getGender());
+            System.out.println("Age: " + client.getAge());
+            System.out.println("Location: " + client.getLocation());
+            System.out.println("Email: " + client.getEmail());
+            System.out.println("Mobile Number: " + client.getMobileNumber());
+            System.out.println("----------------------");
+        }
+
+        session.close();
+        sessionFactory.close();
+    }
+}
